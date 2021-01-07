@@ -75,20 +75,25 @@ public:
       * 
       * Formatting is done by writing the max version number to each slot,
       * thus it performs a write cycle to the first write page of each slot. 
+      *
+      * @return True if successful or false if unable to write to eeprom.
       */
-    void format()
+    bool format()
     {
         // Reset the EEPROM by writing a ~0 into all pages
         auto totalSlots = _totalPages / _bufferPages;
 	auto slotSize = _pageSize * _bufferPages;
         for (uint16_t slot = 0; slot < totalSlots; slot++)
         {
-            _eeprom->writeBlock(slot * slotSize, (uint8_t *)"\xff\xff\xff\xff", 4);
+            if(_eeprom->writeBlock(slot * slotSize, (uint8_t *)"\xff\xff\xff\xff", 4) != 0)
+                return false;
         }
 
         _isEmpty = true;
         _currentSlot = 0;
         _isInitialized = true;
+
+	return true;
     }
 
     /**
