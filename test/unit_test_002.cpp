@@ -72,11 +72,19 @@ unittest(wire_cs_begin)
   miso->push_back(0xff);
   miso->push_back(0xff);
   miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
 
   I2C_eeprom_cyclic_store<DummyTestData> CS;
   auto success = CS.begin(EE, 32, 4);
   assertEqual(true, success);
   assertEqual(4, mosi->size());
+
+  cerr << "Remaining on MISO " << miso->size() << endl;
 }
 
 unittest_main()
