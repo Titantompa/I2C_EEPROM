@@ -229,8 +229,6 @@ private:
             return true;
         }
 
-	return false;
-
         while (startSlot != probeSlot)
         {
             if(_eeprom->readBlock(probeSlot * slotSize, (uint8_t *)&probe, sizeof(current)) != sizeof(current))
