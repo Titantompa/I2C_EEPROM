@@ -293,6 +293,8 @@ unittest(cyclic_store_format_single_page)
   I2C_eeprom_cyclic_store<uint8_t[20]> CS;
   CS.begin(EE, 32, 4);
 
+  mosi->clear();
+
   CS.format();
 
   // CHeck that it writes empty marker to 0, 32, 64 and 96
@@ -324,6 +326,8 @@ unittest(cyclic_store_format_double_page)
 
   CS.format();
 
+  mosi->clear();
+
   // CHeck that it writes empty marker to 0 and 64
   uint8_t expected[12] = {0,0,0xff,0xff,0xff,0xff,0,64,0xff,0xff,0xff,0xff};
 
@@ -350,6 +354,8 @@ unittest(cyclic_store_format_double_page_odd_space)
 
   I2C_eeprom_cyclic_store<uint8_t[40]> CS;
   CS.begin(EE, 32, 5);
+
+  mosi->clear();
 
   CS.format();
 
