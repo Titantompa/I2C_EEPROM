@@ -222,9 +222,7 @@ private:
             return false;
         }
 
-	return false;
-
-        if (current == ~0UL)
+        if (current == 0xffffffff)
         {
             // Memory is blank
             _isEmpty = true;
@@ -233,6 +231,8 @@ private:
             _isInitialized = true;
             return true;
         }
+
+	return false;
 
         while (startSlot != probeSlot)
         {
