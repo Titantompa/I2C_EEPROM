@@ -145,8 +145,8 @@ unittest(cyclic_store_double_finds_last_half_filled_eeprom)
 
   CS.getMetrics(slots, writes);
 
-  assertEqual(2, slots);
-  assertEqual(3, writes);
+  assertEqual(4, slots);
+  assertEqual(4, writes);
 }
 
 /**
