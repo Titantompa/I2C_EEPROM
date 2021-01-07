@@ -64,6 +64,9 @@ public:
         auto bufferSize = sizeof(_currentVersion) + sizeof(T);
         _bufferPages = bufferSize / _pageSize + (bufferSize % _pageSize ? 1 : 0);
 
+	if(_bufferPages >= _totalPages)
+		Serial.println("xxx");
+
         return (_bufferPages < _totalPages) && initialize();
     };
 
@@ -216,6 +219,7 @@ private:
 
         if(_eeprom->readBlock(0, (uint8_t *)&current, sizeof(current)) != sizeof(current))
         {
+		Serial.println("Failed to read");
             return false;
         }
 
@@ -228,6 +232,8 @@ private:
             _isInitialized = true;
             return true;
         }
+
+	Serial.println("Memory was not blank");
 
         while (startSlot != probeSlot)
         {
