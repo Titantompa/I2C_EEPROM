@@ -297,6 +297,7 @@ unittest(cyclic_store_format_single_page)
 
   CS.format();
 
+  // It should write exactly 24 bytes to the eeprom
   assertEqual(24, mosi->size());
 
   // CHeck that it writes empty marker to 0, 32, 64 and 96
@@ -329,6 +330,7 @@ unittest(cyclic_store_format_double_page)
 
   CS.format();
 
+  // It should write exactly 12 bytes to the eeprom
   assertEqual(12, mosi->size());
 
   // CHeck that it writes empty marker to 0 and 64
@@ -336,7 +338,6 @@ unittest(cyclic_store_format_double_page)
 
   for(int i = 0; i < 12; i++)
   {
-    cerr << "written byte " << i << " = " << (int) mosi->front() << endl;
     assertEqual(expected[i], mosi->front());
     mosi->pop_front();
   }
@@ -363,6 +364,7 @@ unittest(cyclic_store_format_double_page_odd_space)
 
   CS.format();
 
+  // It should write exactly 12 bytes to the eeprom
   assertEqual(12, mosi->size());
 
   // CHeck that it writes empty marker to 0 and 64
@@ -370,10 +372,137 @@ unittest(cyclic_store_format_double_page_odd_space)
 
   for(int i = 0; i < 12; i++)
   {
-    cerr << "written byte " << i << " = " << (int) mosi->front() << endl;
     assertEqual(expected[i], mosi->front());
     mosi->pop_front();
   }
+}
+
+/**
+ * Check that writing buffers to the store makes it wrap
+ * to the start of the memory once it has been filled
+ * using a single page buffer.
+ */
+unittest(cyclic_store_wrapping_single_page)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+  
+  auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+
+  I2C_eeprom_cyclic_store<uint8_t[20]> CS;
+  assertEqual(true, CS.begin(EE, 32, 4));
+  assertEqual(2, mosi->size());
+
+  uint8_t dummy[20];
+
+  CS.write(dummy);
+  CS.write(dummy);
+  CS.write(dummy);
+
+  mosi->clear();
+
+  CS.write(dummy);
+
+  // It should write exactly 22 bytes to the eeprom
+  assertEqual(22, mosi->size());
+
+  // check that the address is 0
+  assertEqual(0, mosi->front());
+  mosi->pop_front();
+  assertEqual(0, mosi->front());
+  mosi->pop_front();
+}
+
+/**
+ * Check that writing buffers to the store makes it wrap
+ * to the start of the memory once it has been filled
+ * using a single page buffer.
+ */
+unittest(cyclic_store_wrapping_double_page)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+  
+  auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+
+  I2C_eeprom_cyclic_store<uint8_t[40]> CS;
+  assertEqual(true, CS.begin(EE, 32, 4));
+
+  uint8_t dummy[40];
+
+  CS.write(dummy);
+  CS.write(dummy);
+
+  mosi->clear();
+
+  CS.write(dummy);
+
+  // It should write exactly 42 bytes to the eeprom
+  assertEqual(42, mosi->size());
+
+  // check that the address is 0
+  assertEqual(0, mosi->front());
+  mosi->pop_front();
+  assertEqual(0, mosi->front());
+  mosi->pop_front();
+}
+
+/**
+ * Check that writing buffers to the store makes it wrap
+ * to the start of the memory once it has been filled
+ * using a single page buffer.
+ */
+unittest(cyclic_store_wrapping_double_page_odd_space)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+  
+  auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+
+  I2C_eeprom_cyclic_store<uint8_t[40]> CS;
+  assertEqual(true, CS.begin(EE, 32, 5));
+
+  uint8_t dummy[40];
+
+  CS.write(dummy);
+  CS.write(dummy);
+
+  mosi->clear();
+
+  CS.write(dummy);
+
+  // It should write exactly 42 bytes to the eeprom
+  assertEqual(42, mosi->size());
+
+  // check that the address is 0
+  assertEqual(0, mosi->front());
+  mosi->pop_front();
+  assertEqual(0, mosi->front());
+  mosi->pop_front();
 }
 
 unittest_main()
