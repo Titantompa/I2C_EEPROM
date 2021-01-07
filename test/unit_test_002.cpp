@@ -129,7 +129,60 @@ unittest(cyclic_store_double_page_buffer)
 
   assertEqual(2, slots);
   assertEqual(0, writes);
+}
 
+/**
+ * Verify that I2C_eeprom_cyclic_store fails to
+ * initialize if buffer too large
+ */
+unittest(cyclic_store_fails_init_on_too_large_buffer)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  I2C_eeprom_cyclic_store<uint8_t[400]> CS;
+  assertEqual(false, CS.begin(EE, 32, 4));
+}
+
+/**
+ * Verify that I2C_eeprom_cyclic_store fails to
+ * fetch metrics if initialization has failed.
+ */
+unittest(cyclic_store_fails_metrics_when_failed_initialize)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  I2C_eeprom_cyclic_store<uint8_t[400]> CS;
+  assertEqual(false, CS.begin(EE, 32, 4));
+
+  uint16_t slots;
+  uint32_t writes;
+
+  assertEqual(false, CS.getMetrics(slots, writes));
+}
+
+/**
+ * Verify that I2C_eeprom_cyclic_store fails to
+ * fetch metrics if initialization has failed.
+ */
+unittest(cyclic_store_fails_metrics_when_not_initialized)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  I2C_eeprom_cyclic_store<uint8_t[400]> CS;
+
+  uint16_t slots;
+  uint32_t writes;
+
+  assertEqual(false, CS.getMetrics(slots, writes));
 }
 
 unittest_main()
