@@ -23,7 +23,6 @@
 
 #include <ArduinoUnitTests.h>
 
-#define assertEqualFloat(arg1, arg2, arg3)  assertOp("assertEqualFloat", "expected", fabs(arg1 - arg2), compareLessOrEqual, "<=", "actual", arg3)
 #define assertEqualINF(arg)  assertOp("assertEqualINF", "expected", INFINITY, compareEqual, "==", "actual", arg)
 #define assertEqualNAN(arg)  assertOp("assertEqualNAN", "expected", true, compareEqual, "==", "actual", isnan(arg))
 
@@ -33,7 +32,7 @@
 #include "Arduino.h"
 #include "I2C_eeprom.h"
 
-struct TestData {
+struct DummyTestData {
   uint8_t padding;
 };
 
@@ -53,7 +52,7 @@ unittest(wire_begin)
   assertTrue(Wire.didBegin());
 }
 
-unittest(wire_begin)
+unittest(wire_cs_begin)
 {
   Wire.resetMocks();
 
@@ -66,7 +65,7 @@ unittest(wire_begin)
   assertTrue(Wire.didBegin());
   assertEqual(0, mosi->size());
 
-  I2C_eeprom_cyclic_store<TestData> CS;
+  I2C_eeprom_cyclic_store<DummyTestData> CS;
   auto success = CS.begin(EE, 32, 4);
   assertEqual(true, success);
   assertEqual(0, mosi->size());
