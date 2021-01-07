@@ -309,7 +309,7 @@ unittest(cyclic_store_format_single_page)
  * Check that the format() call of I2C_eeprom_cyclic_store
  * writes to the correct places when buffer is two pages large.
  */
-unittest(cyclic_store_format_single_page)
+unittest(cyclic_store_format_double_page)
 {
   Wire.resetMocks();
 
@@ -338,7 +338,7 @@ unittest(cyclic_store_format_single_page)
  * writes to the correct places when the buffer is two pages
  * large and an odd number of pages is available.
  */
-unittest(cyclic_store_format_single_page)
+unittest(cyclic_store_format_double_page_odd_space)
 {
   Wire.resetMocks();
 
