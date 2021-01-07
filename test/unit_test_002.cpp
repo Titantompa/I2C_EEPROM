@@ -115,22 +115,22 @@ unittest(cyclic_store_double_finds_last_half_filled_eeprom)
   auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
 
   uint32_t tmp = 1;
-  miso->push_back(((uint8t*)&tmp)[0]);
-  miso->push_back(((uint8t*)&tmp)[1]);
-  miso->push_back(((uint8t*)&tmp)[2]);
-  miso->push_back(((uint8t*)&tmp)[3]);
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
 
   uint32_t tmp = 2;
-  miso->push_back(((uint8t*)&tmp)[0]);
-  miso->push_back(((uint8t*)&tmp)[1]);
-  miso->push_back(((uint8t*)&tmp)[2]);
-  miso->push_back(((uint8t*)&tmp)[3]);
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
 
   uint32_t tmp = 3;
-  miso->push_back(((uint8t*)&tmp)[0]);
-  miso->push_back(((uint8t*)&tmp)[1]);
-  miso->push_back(((uint8t*)&tmp)[2]);
-  miso->push_back(((uint8t*)&tmp)[3]);
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
 
   miso->push_back(0xff);
   miso->push_back(0xff);
