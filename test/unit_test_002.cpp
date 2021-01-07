@@ -45,7 +45,7 @@ unittest_teardown()
 {
 }
 
-unittest(wire_begin)
+unittest(eeprom_begin)
 {
   I2C_eeprom EE(0x50);
   EE.begin();
@@ -53,36 +53,24 @@ unittest(wire_begin)
   assertTrue(Wire.didBegin());
 }
 
-unittest(wire_cs_begin)
+unittest(cyclic_store_begin)
 {
   Wire.resetMocks();
 
-  std::deque<uint8_t>* mosi = Wire.getMosi(I2C_EEPROM_ADDR);
-  assertEqual(0, mosi->size());
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
 
   I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
   EE.begin();
   
-  assertTrue(Wire.didBegin());
-  assertEqual(0, mosi->size());
-
-  // It will read three times
   auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
-  miso->push_back(0xff);
-  miso->push_back(0xff);
-  miso->push_back(0xff);
-  miso->push_back(0xff);
   miso->push_back(0xff);
   miso->push_back(0xff);
   miso->push_back(0xff);
   miso->push_back(0xff);
 
   I2C_eeprom_cyclic_store<DummyTestData> CS;
-  auto success = CS.begin(EE, 32, 4);
-  assertEqual(true, success);
-  assertEqual(4, mosi->size());
-
-  cerr << "Remaining on MISO " << miso->size() << endl;
+  assertEqual(true, CS.begin(EE, 32, 4));
+  assertEqual(2, mosi->size());
 
   uint16_t slots;
   uint32_t writes;
@@ -90,10 +78,6 @@ unittest(wire_cs_begin)
   CS.getMetrics(slots, writes);
 
   cerr << "Slots = " << slots << " and Writes = " << writes << endl;
-
-
-
-
 }
 
 unittest_main()
