@@ -85,6 +85,17 @@ unittest(wire_cs_begin)
   assertEqual(4, mosi->size());
 
   cerr << "Remaining on MISO " << miso->size() << endl;
+
+  uint16_t slots;
+  uint32_t writes;
+
+  CS.getMetrics(slots, writes);
+
+  cerr << "Slots = " << slots << " and Writes = " << writes << endl;
+
+
+
+
 }
 
 unittest_main()
