@@ -31,6 +31,7 @@
 
 #include "Arduino.h"
 #include "I2C_eeprom.h"
+#include "I2C_eeprom_cyclic_store.h"
 
 struct DummyTestData {
   uint8_t padding;
