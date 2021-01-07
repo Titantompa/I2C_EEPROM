@@ -59,7 +59,7 @@ unittest(cyclic_store_fails_begin)
   EE.begin();
 
   I2C_eeprom_cyclic_store<DummyTestData> CS;
-  assertEqual(false CS.begin(EE, 32, 4));
+  assertEqual(false, CS.begin(EE, 32, 4));
 }
 
 /**
