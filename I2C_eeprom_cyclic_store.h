@@ -82,7 +82,7 @@ public:
     {
         // Reset the EEPROM by writing a ~0 into all pages
         auto totalSlots = _totalPages / _bufferPages;
-	auto slotSize = _pageSize * _bufferPages;
+        auto slotSize = _pageSize * _bufferPages;
         for (uint16_t slot = 0; slot < totalSlots; slot++)
         {
             if(_eeprom->writeBlock(slot * slotSize, (uint8_t *)"\xff\xff\xff\xff", 4) != 0)
