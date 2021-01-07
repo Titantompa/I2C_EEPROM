@@ -276,6 +276,92 @@ unittest(cyclic_store_increments_write_counter)
   assertNotEqual(originalWrites, newWrites);
 }
 
+/**
+ * Check that the format() call of I2C_eeprom_cyclic_store
+ * writes to the correct places when buffer size is smaller
+ * than page size
+ */
+unittest(cyclic_store_format_single_page)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  I2C_eeprom_cyclic_store<uint8_t[20]> CS;
+  CS.begin(EE, 32, 4));
+
+  CS.format();
+
+  // CHeck that it writes empty marker to 0, 32, 64 and 96
+  uint8_t expected[24] = {0,0,0xff,0xff,0xff,0xff,0,32,0xff,0xff,0xff,0xff,0,64,0xff,0xff,0xff,0xff,0,96,0xff,0xff,0xff,0xff};
+
+  for(int i = 0; i < 24; i++)
+  {
+    assertEqual(expected[i], mosi->front());
+    mosi->pop_front();
+  }
+}
+
+/**
+ * Check that the format() call of I2C_eeprom_cyclic_store
+ * writes to the correct places when buffer is two pages large.
+ */
+unittest(cyclic_store_format_single_page)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  I2C_eeprom_cyclic_store<uint8_t[40]> CS;
+  CS.begin(EE, 32, 4));
+
+  CS.format();
+
+  // CHeck that it writes empty marker to 0 and 64
+  uint8_t expected[12] = {0,0,0xff,0xff,0xff,0xff,0,32,0xff,0xff,0xff,0xff,0,64,0xff,0xff,0xff,0xff,0,96,0xff,0xff,0xff,0xff};
+
+  for(int i = 0; i < 12; i++)
+  {
+    assertEqual(expected[i], mosi->front());
+    mosi->pop_front();
+  }
+}
+
+/**
+ * Check that the format() call of I2C_eeprom_cyclic_store
+ * writes to the correct places when the buffer is two pages
+ * large and an odd number of pages is available.
+ */
+unittest(cyclic_store_format_single_page)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  I2C_eeprom_cyclic_store<uint8_t[40]> CS;
+  CS.begin(EE, 32, 5));
+
+  CS.format();
+
+  // CHeck that it writes empty marker to 0 and 64
+  uint8_t expected[12] = {0,0,0xff,0xff,0xff,0xff,0,64,0xff,0xff,0xff,0xff};
+
+  for(int i = 0; i < 12; i++)
+  {
+    assertEqual(expected[i], mosi->front());
+    mosi->pop_front();
+  }
+}
+
 unittest_main()
 
 // --------
