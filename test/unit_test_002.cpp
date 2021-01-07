@@ -300,6 +300,7 @@ unittest(cyclic_store_format_single_page)
 
   for(int i = 0; i < 24; i++)
   {
+    cerr << "written byte " << i << " = " << (int) mosi->front() << endl;
     assertEqual(expected[i], mosi->front());
     mosi->pop_front();
   }
