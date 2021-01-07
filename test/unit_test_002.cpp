@@ -45,15 +45,11 @@ unittest_teardown()
 {
 }
 
-unittest(eeprom_begin)
-{
-  I2C_eeprom EE(0x50);
-  EE.begin();
-  
-  assertTrue(Wire.didBegin());
-}
-
-unittest(cyclic_store_begin)
+/**
+ * Verify that I2C_eeprom_cyclic_store successfully 
+ * initializes on empty eeprom.
+ */
+unittest(cyclic_store_empty_begin)
 {
   Wire.resetMocks();
 
@@ -71,14 +67,39 @@ unittest(cyclic_store_begin)
   I2C_eeprom_cyclic_store<DummyTestData> CS;
   assertEqual(true, CS.begin(EE, 32, 4));
   assertEqual(2, mosi->size());
+}
+
+/**
+ * Verify that I2C_eeprom_cyclic_store reports
+ * the correct metrics on empty eeprom.
+ */
+unittest(cyclic_store_empty_metrics)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+
+  I2C_eeprom_cyclic_store<DummyTestData> CS;
+  assertEqual(true, CS.begin(EE, 32, 4));
 
   uint16_t slots;
   uint32_t writes;
 
   CS.getMetrics(slots, writes);
 
-  cerr << "Slots = " << slots << " and Writes = " << writes << endl;
+  assertEqual(4, slots);
+  assertEqual(0, writes);
 }
+
 
 unittest_main()
 
