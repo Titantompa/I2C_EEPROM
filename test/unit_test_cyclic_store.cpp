@@ -302,6 +302,60 @@ unittest(cyclic_store_finds_last_wrapped_eeprom)
 }
 
 /**
+ * Verify that I2C_eeprom_cyclic_store successfully finds the last
+ * entry after writes have wrapped around the end of the eeprom
+ * when using a buffer that spans two pages. And that it does so
+ * even if the number of pages is not evenly divisable by the 
+ * number of pages the buffer span.
+ */
+unittest(cyclic_store_finds_last_wrapped_eeprom_double_page_buffer)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
+
+  uint32_t tmp = 9;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  tmp = 10;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  tmp = 11;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  tmp = 8;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  I2C_eeprom_cyclic_store<uint8_t[40]> CS;
+  assertEqual(true, CS.begin(EE, 32, 9));
+
+  uint16_t slots;
+  uint32_t writes;
+
+  CS.getMetrics(slots, writes);
+
+  assertEqual(4, slots);
+  assertEqual(12, writes);
+}
+
+/**
  * Verify that I2C_eeprom_cyclic_store fails to
  * initialize if buffer too large
  */
