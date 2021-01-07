@@ -64,9 +64,6 @@ public:
         auto bufferSize = sizeof(_currentVersion) + sizeof(T);
         _bufferPages = bufferSize / _pageSize + (bufferSize % _pageSize ? 1 : 0);
 
-	if(_bufferPages >= _totalPages)
-		Serial.println("xxx");
-
         return (_bufferPages < _totalPages) && initialize();
     };
 
@@ -241,7 +238,7 @@ private:
                 return false;
             }
 
-            if (probe == ~0UL || probe <= current)
+            if (probe == 0xffffffff || probe <= current)
             {
                 // 1. Nothing has been written to the memory at Probe
                 // 2. The slots have the same timestamp, this shouldn't happen, treat as if Probe slot hasn't been written
