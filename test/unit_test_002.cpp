@@ -68,10 +68,10 @@ unittest(wire_cs_begin)
 
   // It will read three times
   auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
-  miso->push_back(0x0);
-  miso->push_back(0x0);
-  miso->push_back(0x0);
-  miso->push_back(0x0);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
   miso->push_back(0xff);
   miso->push_back(0xff);
   miso->push_back(0xff);

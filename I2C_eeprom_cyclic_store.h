@@ -219,9 +219,10 @@ private:
 
         if(_eeprom->readBlock(0, (uint8_t *)&current, sizeof(current)) != sizeof(current))
         {
-		Serial.println("Failed to read");
             return false;
         }
+
+	return false;
 
         if (current == ~0UL)
         {
@@ -232,8 +233,6 @@ private:
             _isInitialized = true;
             return true;
         }
-
-	Serial.println("Memory was not blank");
 
         while (startSlot != probeSlot)
         {
