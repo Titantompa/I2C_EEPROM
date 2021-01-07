@@ -406,13 +406,14 @@ unittest(cyclic_store_wrapping_single_page)
   CS.write(dummy);
   CS.write(dummy);
   CS.write(dummy);
+  CS.write(dummy);
 
   mosi->clear();
 
   CS.write(dummy);
 
-  // It should write exactly 22 bytes to the eeprom
-  assertEqual(22, mosi->size());
+  // It should write exactly 26 bytes to the eeprom (addr+header+buffer)
+  assertEqual(26, mosi->size());
 
   // check that the address is 0
   assertEqual(0, mosi->front());
@@ -453,8 +454,8 @@ unittest(cyclic_store_wrapping_double_page)
 
   CS.write(dummy);
 
-  // It should write exactly 42 bytes to the eeprom
-  assertEqual(42, mosi->size());
+  // It should write exactly 50 bytes to the eeprom (addr+header+buffer+wait+addr+remainder)
+  assertEqual(50, mosi->size());
 
   // check that the address is 0
   assertEqual(0, mosi->front());
@@ -495,8 +496,8 @@ unittest(cyclic_store_wrapping_double_page_odd_space)
 
   CS.write(dummy);
 
-  // It should write exactly 42 bytes to the eeprom
-  assertEqual(42, mosi->size());
+  // It should write exactly 50 bytes to the eeprom (addr+header+buffer+wait+addr+remainder)
+  assertEqual(50, mosi->size());
 
   // check that the address is 0
   assertEqual(0, mosi->front());
