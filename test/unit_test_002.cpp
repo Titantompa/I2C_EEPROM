@@ -120,13 +120,13 @@ unittest(cyclic_store_double_finds_last_half_filled_eeprom)
   miso->push_back(((uint8_t*)&tmp)[2]);
   miso->push_back(((uint8_t*)&tmp)[3]);
 
-  uint32_t tmp = 2;
+  tmp = 2;
   miso->push_back(((uint8_t*)&tmp)[0]);
   miso->push_back(((uint8_t*)&tmp)[1]);
   miso->push_back(((uint8_t*)&tmp)[2]);
   miso->push_back(((uint8_t*)&tmp)[3]);
 
-  uint32_t tmp = 3;
+  tmp = 3;
   miso->push_back(((uint8_t*)&tmp)[0]);
   miso->push_back(((uint8_t*)&tmp)[1]);
   miso->push_back(((uint8_t*)&tmp)[2]);
@@ -272,7 +272,8 @@ unittest(cyclic_store_increments_write_counter)
   CS.getMetrics(slots, newWrites);
 
   assertEqual(4, slots);
-  assertEqual(2, writes);
+  assertEqual(2, newWrites);
+  assertNotEqual(originalWrites, newWrites);
 }
 
 unittest_main()
