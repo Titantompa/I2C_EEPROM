@@ -297,12 +297,13 @@ unittest(cyclic_store_format_single_page)
 
   CS.format();
 
+  assertEqual(24, mosi->size());
+
   // CHeck that it writes empty marker to 0, 32, 64 and 96
   uint8_t expected[24] = {0,0,0xff,0xff,0xff,0xff,0,32,0xff,0xff,0xff,0xff,0,64,0xff,0xff,0xff,0xff,0,96,0xff,0xff,0xff,0xff};
 
   for(int i = 0; i < 24; i++)
   {
-    cerr << "written byte " << i << " = " << (int) mosi->front() << endl;
     assertEqual(expected[i], mosi->front());
     mosi->pop_front();
   }
@@ -324,15 +325,18 @@ unittest(cyclic_store_format_double_page)
   I2C_eeprom_cyclic_store<uint8_t[40]> CS;
   CS.begin(EE, 32, 4);
 
+  mosi->clear();
+
   CS.format();
 
-  mosi->clear();
+  assertEqual(12, mosi->size());
 
   // CHeck that it writes empty marker to 0 and 64
   uint8_t expected[12] = {0,0,0xff,0xff,0xff,0xff,0,64,0xff,0xff,0xff,0xff};
 
   for(int i = 0; i < 12; i++)
   {
+    cerr << "written byte " << i << " = " << (int) mosi->front() << endl;
     assertEqual(expected[i], mosi->front());
     mosi->pop_front();
   }
@@ -359,11 +363,14 @@ unittest(cyclic_store_format_double_page_odd_space)
 
   CS.format();
 
+  assertEqual(12, mosi->size());
+
   // CHeck that it writes empty marker to 0 and 64
   uint8_t expected[12] = {0,0,0xff,0xff,0xff,0xff,0,64,0xff,0xff,0xff,0xff};
 
   for(int i = 0; i < 12; i++)
   {
+    cerr << "written byte " << i << " = " << (int) mosi->front() << endl;
     assertEqual(expected[i], mosi->front());
     mosi->pop_front();
   }
