@@ -27,10 +27,15 @@
 #define assertEqualINF(arg)  assertOp("assertEqualINF", "expected", INFINITY, compareEqual, "==", "actual", arg)
 #define assertEqualNAN(arg)  assertOp("assertEqualNAN", "expected", true, compareEqual, "==", "actual", isnan(arg))
 
-#define I2C_EEPROM_WIRE FailsToBuild
+#define I2C_EEPROM_ADDR 0x50
+#define I2C_EEPROM_SIZE 0x1000 // 4096
 
 #include "Arduino.h"
 #include "I2C_eeprom.h"
+
+struct TestData {
+  uint8_t padding;
+};
 
 unittest_setup()
 {
@@ -40,25 +45,31 @@ unittest_teardown()
 {
 }
 
-/*
-unittest(test_new_operator)
-{
-  assertEqualINF(exp(800));
-  assertEqualINF(0.0/0.0);
-  assertEqualINF(42);
-  
-  assertEqualNAN(INFINITY - INFINITY);
-  assertEqualNAN(0.0/0.0);
-  assertEqualNAN(42);
-}
-*/
-
 unittest(wire_begin)
 {
   I2C_eeprom EE(0x50);
   EE.begin();
   
   assertTrue(Wire.didBegin());
+}
+
+unittest(wire_begin)
+{
+  Wire.resetMocks();
+
+  std::deque<uint8_t>* mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+  assertEqual(0, mosi->size());
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+  
+  assertTrue(Wire.didBegin());
+  assertEqual(0, mosi->size());
+
+  I2C_eeprom_cyclic_store<TestData> CS;
+  auto success = CS.begin(EE, 32, 4);
+  assertEqual(true, success);
+  assertEqual(0, mosi->size());
 }
 
 unittest_main()
