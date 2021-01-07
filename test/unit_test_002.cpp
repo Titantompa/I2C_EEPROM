@@ -46,6 +46,23 @@ unittest_teardown()
 }
 
 /**
+ * Verify that I2C_eeprom_cyclic_store fails to 
+ * initialize when unable to read from eeprom.
+ */
+unittest(cyclic_store_fails_begin)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  I2C_eeprom_cyclic_store<DummyTestData> CS;
+  assertEqual(false CS.begin(EE, 32, 4));
+}
+
+/**
  * Verify that I2C_eeprom_cyclic_store successfully 
  * initializes on empty eeprom.
  */
