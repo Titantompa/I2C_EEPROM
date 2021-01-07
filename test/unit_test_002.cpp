@@ -113,9 +113,47 @@ unittest(cyclic_store_double_page_buffer)
 
 /**
  * Verify that I2C_eeprom_cyclic_store successfully finds
+ * the latest version when there is only one in the eeprom.
+ */
+unittest(cyclic_store_finds_single_stored_version)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
+
+  uint32_t tmp = 0;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+  miso->push_back(0xff);
+
+  I2C_eeprom_cyclic_store<DummyTestData> CS;
+  assertEqual(true, CS.begin(EE, 32, 4));
+
+  uint16_t slots;
+  uint32_t writes;
+
+  CS.getMetrics(slots, writes);
+
+  assertEqual(4, slots);
+  assertEqual(1, writes);
+}
+
+/**
+ * Verify that I2C_eeprom_cyclic_store successfully finds
  * the last entry before the entire eeprom has been filled.
  */
-unittest(cyclic_store_double_finds_last_half_filled_eeprom)
+unittest(cyclic_store_finds_last_half_filled_eeprom)
 {
   Wire.resetMocks();
 
@@ -163,9 +201,60 @@ unittest(cyclic_store_double_finds_last_half_filled_eeprom)
 
 /**
  * Verify that I2C_eeprom_cyclic_store successfully finds the last
+ * version when it was written to the last slot of the memory.
+ */
+unittest(cyclic_store_finds_version_if_last_slot)
+{
+  Wire.resetMocks();
+
+  auto mosi = Wire.getMosi(I2C_EEPROM_ADDR);
+
+  I2C_eeprom EE(I2C_EEPROM_ADDR, I2C_EEPROM_SIZE);
+  EE.begin();
+
+  auto miso = Wire.getMiso(I2C_EEPROM_ADDR);
+
+  uint32_t tmp = 9;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  tmp = 10;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  tmp = 11;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  tmp = 12;
+  miso->push_back(((uint8_t*)&tmp)[0]);
+  miso->push_back(((uint8_t*)&tmp)[1]);
+  miso->push_back(((uint8_t*)&tmp)[2]);
+  miso->push_back(((uint8_t*)&tmp)[3]);
+
+  I2C_eeprom_cyclic_store<DummyTestData> CS;
+  assertEqual(true, CS.begin(EE, 32, 4));
+
+  uint16_t slots;
+  uint32_t writes;
+
+  CS.getMetrics(slots, writes);
+
+  assertEqual(4, slots);
+  assertEqual(13, writes);
+}
+
+/**
+ * Verify that I2C_eeprom_cyclic_store successfully finds the last
  * entry after writes have wrapped around the end of the eeprom.
  */
-unittest(cyclic_store_double_finds_last_wrapped_eeprom)
+unittest(cyclic_store_finds_last_wrapped_eeprom)
 {
   Wire.resetMocks();
 
