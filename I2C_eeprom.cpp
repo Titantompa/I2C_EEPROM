@@ -51,27 +51,22 @@ I2C_eeprom::I2C_eeprom(const uint8_t deviceAddress, const unsigned int deviceSiz
     // Try to guess page size from device size (going by Microchip 24LCXX datasheets here).
     if (deviceSize <= 256) // 2Kbit
     {
-        this->_isAddressSizeTwoWords = false;
         this->_pageSize = 8;
     }
     else if (deviceSize <= 2048) // 16Kbit
     {
-        this->_isAddressSizeTwoWords = false;
         this->_pageSize = 16;
     }
     else if(deviceSize <= 8192) // 64Kbit
     {
-        this->_isAddressSizeTwoWords = true;
         this->_pageSize = 32;
     }
     else if(deviceSize <= 32768) // 256Kbit
     {
-        this->_isAddressSizeTwoWords = true;
         this->_pageSize = 64;
     }
     else
     {
-        this->_isAddressSizeTwoWords = true;
         this->_pageSize = 128;
     }
 }
