@@ -10,10 +10,7 @@
 
 #include <ArduinoUnitTests.h>
 
-class I2C_eeprom_wrapper {
-    public:
-        static uint8_t pageSize(I2C_eeprom &eeprom) { return eeprom._pageSize; }
-};
+class I2C_eeprom_wrapper;
 
 #define UNIT_TEST_FRIEND friend class I2C_eeprom_wrapper
 
@@ -22,6 +19,11 @@ class I2C_eeprom_wrapper {
 
 #define I2C_EEPROM_ADDR 0x50
 #define I2C_EEPROM_SIZE 0x1000 // 4096
+
+class I2C_eeprom_wrapper {
+    public:
+        static uint8_t pageSize(I2C_eeprom &eeprom) { return eeprom._pageSize; }
+};
 
 unittest_setup()
 {
