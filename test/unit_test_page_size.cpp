@@ -36,15 +36,82 @@ unittest_teardown()
 /**
  * Verify that an instance gets the default page size
  * when the constructor without device size is used.
+ * The expected outcome is I2C_EEPROM_PAGESIZE 
  */
-unittest(i2c_eeprom_default)
+unittest(i2c_eeprom_default_page_size)
 {
   Wire.resetMocks();
 
   I2C_eeprom eeprom(I2C_EEPROM_ADDR);
 
-  assertEqual(I2C_EEPROM_PAGESIZE, I2C_eeprom_wrapper::pageSize(eeprom));
+  assertEqual(I2C_EEPROM_PAGESIZE, (int) I2C_eeprom_wrapper::pageSize(eeprom));
 }
+
+/**
+ * Verify that the constructor calculates the correcty
+ * page size for a 1K eeprom (e g AT24C01).
+ */
+unittest(i2c_eeprom_1k_page_size)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x80);
+
+  assertEqual(8, (int) I2C_eeprom_wrapper::pageSize(eeprom));
+}
+
+/**
+ * Verify that the constructor calculates the correcty
+ * page size for a 2K byte eeprom (e g AT24C02).
+ */
+unittest(i2c_eeprom_1k_page_size)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x100);
+
+  assertEqual(8, (int) I2C_eeprom_wrapper::pageSize(eeprom));
+}
+
+/**
+ * Verify that the constructor calculates the correcty
+ * page size for a 4K byte eeprom (e g AT24C04).
+ */
+unittest(i2c_eeprom_1k_page_size)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x200);
+
+  assertEqual(16, (int) I2C_eeprom_wrapper::pageSize(eeprom));
+}
+
+/**
+ * Verify that the constructor calculates the correcty
+ * page size for a 8K byte eeprom (e g AT24C08).
+ */
+unittest(i2c_eeprom_1k_page_size)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x400);
+
+  assertEqual(16, (int) I2C_eeprom_wrapper::pageSize(eeprom));
+}
+
+/**
+ * Verify that the constructor calculates the correcty
+ * page size for a 16K byte eeprom (e g AT24C16).
+ */
+unittest(i2c_eeprom_1k_page_size)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x800);
+
+  assertEqual(16, (int) I2C_eeprom_wrapper::pageSize(eeprom));
+}
+
 
 unittest_main()
 
