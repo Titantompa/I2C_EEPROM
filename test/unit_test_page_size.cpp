@@ -46,4 +46,6 @@ unittest(i2c_eeprom_default)
   assertEqual(I2C_EEPROM_PAGESIZE, I2C_eeprom_wrapper::pageSize(eeprom));
 }
 
+unittest_main()
+
 // ------------------
