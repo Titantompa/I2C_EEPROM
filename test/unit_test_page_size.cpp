@@ -102,7 +102,7 @@ unittest(i2c_eeprom_8k_page_size)
   I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x400);
 
   assertEqual(16, (int) I2C_eeprom_wrapper::pageSize(eeprom));
-  assertEqual(false I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
+  assertEqual(false, I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
 }
 
 /**
@@ -116,7 +116,7 @@ unittest(i2c_eeprom_16k_page_size)
   I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x800);
 
   assertEqual(16, (int) I2C_eeprom_wrapper::pageSize(eeprom));
-  assertEqual(false I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
+  assertEqual(false, I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
 }
 
 /**
