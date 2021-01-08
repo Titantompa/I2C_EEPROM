@@ -50,8 +50,8 @@ unittest(i2c_eeprom_default_page_size)
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 1K eeprom (e g AT24C01).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 1K eeprom (e g AT24C01).
  */
 unittest(i2c_eeprom_1k_page_size)
 {
@@ -64,8 +64,8 @@ unittest(i2c_eeprom_1k_page_size)
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 2K byte eeprom (e g AT24C02).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 2K eeprom (e g AT24C02).
  */
 unittest(i2c_eeprom_2k_page_size)
 {
@@ -78,8 +78,8 @@ unittest(i2c_eeprom_2k_page_size)
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 4K byte eeprom (e g AT24C04).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 4K eeprom (e g AT24C04).
  */
 unittest(i2c_eeprom_4k_page_size)
 {
@@ -88,12 +88,12 @@ unittest(i2c_eeprom_4k_page_size)
   I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x200);
 
   assertEqual(16, (int) I2C_eeprom_wrapper::pageSize(eeprom));
-  assertEqual(true, I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
+  assertEqual(false, I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 8K byte eeprom (e g AT24C08).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 8K eeprom (e g AT24C08).
  */
 unittest(i2c_eeprom_8k_page_size)
 {
@@ -102,12 +102,12 @@ unittest(i2c_eeprom_8k_page_size)
   I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x400);
 
   assertEqual(16, (int) I2C_eeprom_wrapper::pageSize(eeprom));
-  assertEqual(true, I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
+  assertEqual(false I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 16K byte eeprom (e g AT24C16).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 16K eeprom (e g AT24C16).
  */
 unittest(i2c_eeprom_16k_page_size)
 {
@@ -116,12 +116,12 @@ unittest(i2c_eeprom_16k_page_size)
   I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x800);
 
   assertEqual(16, (int) I2C_eeprom_wrapper::pageSize(eeprom));
-  assertEqual(true, I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
+  assertEqual(false I2C_eeprom_wrapper::isAddressSizeTwoWords(eeprom));
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 32K byte eeprom (e g AT24C32).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 32K eeprom (e g AT24C32).
  */
 unittest(i2c_eeprom_32k_page_size)
 {
@@ -134,8 +134,8 @@ unittest(i2c_eeprom_32k_page_size)
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 64K byte eeprom (e g AT24C64).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 64K eeprom (e g AT24C64).
  */
 unittest(i2c_eeprom_64k_page_size)
 {
@@ -148,8 +148,8 @@ unittest(i2c_eeprom_64k_page_size)
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 128K byte eeprom (e g AT24C128).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 128K eeprom (e g AT24C128).
  */
 unittest(i2c_eeprom_128k_page_size)
 {
@@ -162,8 +162,8 @@ unittest(i2c_eeprom_128k_page_size)
 }
 
 /**
- * Verify that the constructor calculates the correcty
- * page size for a 256K byte eeprom (e g AT24C256).
+ * Verify that the constructor calculates the correct
+ * page size and addressing for a 256K eeprom (e g AT24C256).
  */
 unittest(i2c_eeprom_256k_page_size)
 {
