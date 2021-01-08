@@ -9,21 +9,20 @@
 //
 
 #include <ArduinoUnitTests.h>
+#include "Arduino.h"
 
 class I2C_eeprom_wrapper;
 
 #define UNIT_TEST_FRIEND friend class I2C_eeprom_wrapper
 
-#include "Arduino.h"
 #include "I2C_eeprom.h"
-
-#define I2C_EEPROM_ADDR 0x50
-#define I2C_EEPROM_SIZE 0x1000 // 4096
 
 class I2C_eeprom_wrapper {
     public:
         static uint8_t pageSize(I2C_eeprom &eeprom) { return eeprom._pageSize; }
 };
+
+#define I2C_EEPROM_ADDR 0x50
 
 unittest_setup()
 {
@@ -138,6 +137,31 @@ unittest(i2c_eeprom_64k_page_size)
   assertEqual(32, (int) I2C_eeprom_wrapper::pageSize(eeprom));
 }
 
+/**
+ * Verify that the constructor calculates the correcty
+ * page size for a 128K byte eeprom (e g AT24C128).
+ */
+unittest(i2c_eeprom_128k_page_size)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x4000);
+
+  assertEqual(64, (int) I2C_eeprom_wrapper::pageSize(eeprom));
+}
+
+/**
+ * Verify that the constructor calculates the correcty
+ * page size for a 256K byte eeprom (e g AT24C256).
+ */
+unittest(i2c_eeprom_256k_page_size)
+{
+  Wire.resetMocks();
+
+  I2C_eeprom eeprom(I2C_EEPROM_ADDR, 0x8000);
+
+  assertEqual(64, (int) I2C_eeprom_wrapper::pageSize(eeprom));
+}
 
 unittest_main()
 
